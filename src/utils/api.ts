@@ -6,31 +6,33 @@ class ApiClient {
     this.token = localStorage.getItem('auth_token');
   }
 
-  private async request(endpoint: string, options: RequestInit = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    const config: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.token && { Authorization: `Bearer ${this.token}` }),
-        ...options.headers,
-      },
-      ...options,
-    };
+private async request(endpoint: string, options: RequestInit = {}) {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const config: RequestInit = {
+    credentials: 'include', // 👈 This is what you need
+    headers: {
+      'Content-Type': 'application/json',
+      ...(this.token && { Authorization: `Bearer ${this.token}` }),
+      ...options.headers,
+    },
+    ...options,
+  };
 
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
+  try {
+    const response = await fetch(url, config);
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Request failed');
-      }
-
-      return data;
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error;
+    if (!response.ok) {
+      throw new Error(data.error || 'Request failed');
     }
+
+    return data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error;
   }
+}
+
 
   // Auth methods
   async login(email: string, password: string) {

@@ -6,14 +6,21 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { connectToDatabase, ObjectId } from './database.js';
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser"
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
-app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+	cors({
+		origin:process.env.FRONTEND_URL,
+		credentials:true,
+	})
+)
 
 let db;
 
@@ -173,5 +180,7 @@ connectToDatabase().then(collections => {
 
   app.get('/api/health', (req, res) => res.json({ status: 'OK', timestamp: new Date().toISOString() }));
 
-  app.listen(PORT, () => console.log(`MongoDB-based server running on port ${PORT}`));
+  app.listen(PORT, () => {
+    console.log(`App is running at ${PORT}`)
+  })
 });
