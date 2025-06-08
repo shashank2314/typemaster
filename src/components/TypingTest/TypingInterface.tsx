@@ -27,8 +27,8 @@ export function TypingInterface({ config, onTestComplete, onRestart }: TypingInt
   const intervalRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    const wordCount = config.mode === 'words' ? config.wordLimit! : 100;
-    const generatedText = generateText(wordCount, config.difficulty, config.includePunctuation, config.includeNumbers);
+    const wordCount = config.mode === 'words' ? config.wordLimit! : 200;
+    const generatedText = generateText(wordCount+20, config.difficulty, config.includePunctuation, config.includeNumbers);
     setText(generatedText);
     setTimeLeft(config.timeLimit || 0);
 
